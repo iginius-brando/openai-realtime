@@ -1,0 +1,16 @@
+{
+  "name": "openai-realtime",
+  "version": "1.0.0",
+  "description": "OpenAI Realtime API integration with Cloud Run",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "ws": "^8.16.0",
+    "@google-cloud/logging-winston": "^6.0.0",
+    "winston": "^3.11.0"
+  }
+}
