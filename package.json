@@ -1,8 +1,6 @@
 {
   "name": "openai-realtime",
   "version": "1.0.0",
-  "description": "OpenAI Realtime API integration with Cloud Run",
-  "main": "server.js",
   "type": "module",
   "scripts": {
     "start": "node server.js"
