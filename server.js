@@ -1,7 +1,20 @@
+import express from 'express';
+import { WebSocket } from 'ws';
+
+const app = express();
+app.use(express.json());
+
+const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
+const wsUrl = "wss://api.openai.com/v1/realtime?model=gpt-4o-realtime-preview-2024-10-01";
+
+// Endpoint di base per health check
+app.get('/', (req, res) => {
+  res.send('Server is running');
+});
+
+// Endpoint chat
 app.post('/chat', async (req, res) => {
   console.log('Ricevuta richiesta chat:', req.body);
-  
-  const wsUrl = "wss://api.openai.com/v1/realtime?model=gpt-4o-realtime-preview-2024-10-01";
   
   try {
     const ws = new WebSocket(wsUrl, {
@@ -15,7 +28,7 @@ app.post('/chat', async (req, res) => {
       console.log('Timeout raggiunto - chiusura connessione');
       ws.close();
       res.status(504).json({ error: 'Timeout' });
-    }, 30000); // 30 secondi di timeout
+    }, 30000);
 
     ws.on('open', () => {
       console.log('WebSocket connesso');
@@ -29,7 +42,7 @@ app.post('/chat', async (req, res) => {
         }
       }));
 
-      // Poi inviamo response.create per iniziare la risposta
+      // Poi inviamo response.create
       ws.send(JSON.stringify({
         type: 'response.create',
         response: {
@@ -83,4 +96,10 @@ app.post('/chat', async (req, res) => {
     console.error('Errore generale:', error);
     res.status(500).json({ error: error.message });
   }
+});
+
+// Avvio del server
+const port = process.env.PORT || 8080;
+app.listen(port, '0.0.0.0', () => {
+  console.log(`Server in esecuzione sulla porta ${port}`);
 });
